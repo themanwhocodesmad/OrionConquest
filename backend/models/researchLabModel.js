@@ -44,7 +44,7 @@ const researchFieldSchema = new Schema({
 
 // Research Lab Schema with research field schema
 const researchLabSchema = new Schema({
-    active: { type: Boolean, default: true },
+    active: { type: Boolean, default: false },
     research: [researchFieldSchema],
 });
 

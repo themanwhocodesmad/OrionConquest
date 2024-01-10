@@ -6,7 +6,7 @@ const MineTypes = require('../constants/mines-enum')
 
 // Shipyard Schema extending Building Schema
 const shipyardSchema = new Schema({
-    active: {
+    taskActive: {
         type: Boolean,
         default: true
     }
