@@ -72,10 +72,7 @@ exports.upgradeResearchLab = async (req, res) => {
     }
 };
 
-//Ethan please delete
-if (ResearchLab.level < 3) {
-    return res.status(400).json({ message: 'Requires Research Lab level 3!' });
-}
+
 
 
 
