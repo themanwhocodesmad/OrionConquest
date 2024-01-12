@@ -1,87 +1,117 @@
-//todo Busy With
-const CommStation = require('./commStationModel')
-const Player = require('./player-model')
+const { ResearchLab } = require('../models/researchLabModel');
+const cron = require('node-cron');
+const { COMMS_UPGRADE_DURATION } = require('../constants/comms-enum')
+const { Building } = require('../models/buildings-abstract-model')
 
-const calculateUpgradeDuration = (currentLevel) => {
- // This is an example formula. Adjust as needed.
- return 35 * Math.pow(1.75, currentLevel)
-}
+// Controller function to CREATE a Research Lab
+const createCommsStation = async (req, res,) => {
 
-const calculateUpgradeCosts = (baseCosts, currentLevel) => {
- return {
-    metal: baseCosts.metal * Math.pow(1.75, currentLevel),
-    crystal: baseCosts.crystal * Math.pow(1.75, currentLevel),
-    gas: baseCosts.gas * Math.pow(1.75, currentLevel),
-    energy: baseCosts.energy * Math.pow(1.75, currentLevel),
- }
-}
 
-const createCommStationInstance = async (playerId) => {
- try {
-    const player = await Player.findById(playerId)
-    const commStation = new CommStation({
-      playerId: playerId,
-      name: 'Comm Station',
-      level: 0,
-      health: 100,
-      upgradeDuration: calculateUpgradeDuration(0),
-      upgradeDurationBase: 35,
-      upgradeStartTime: Date.now(),
-      taskId: 0,
-      upgradeCosts: calculateUpgradeCosts(
-        { metal: 120, crystal: 120, gas: 120, energy: 5 },
-        0
-      ),
-      populations: (0 * (player.CommStation.level + 1)) / 2, // Arithmetic sum of the current level
-    })
-    await commStation.save()
-    return commStation
- } catch (error) {
-    console.error(error)
-    throw error
- }
-}
+    try {
 
-const upgradeCommStation = async (commStationId) => {
- try {
-    const commStation = await CommStation.findById(commStationId)
-    const player = await Player.findById(commStation.playerId)
-    if (player.resources.metal >= commStation.upgradeCosts.metal &&
-        player.resources.crystal >= commStation.upgradeCosts.crystal &&
-        player.resources.gas >= commStation.upgradeCosts.gas &&
-        player.resources.energy >= commStation.upgradeCosts.energy) {
-      player.resources.metal -= commStation.upgradeCosts.metal
-      player.resources.crystal -= commStation.upgradeCosts.crystal
-      player.resources.gas -= commStation.upgradeCosts.gas
-      player.resources.energy -= commStation.upgradeCosts.energy
-      commStation.level += 1
-      commStation.health += 100
-      commStation.upgradeDuration = calculateUpgradeDuration(commStation.level)
-      commStation.upgradeDurationBase = 35
-      commStation.upgradeStartTime = Date.now()
-      commStation.taskId = 0
-      commStation.upgradeCosts = calculateUpgradeCosts(commStation.upgradeCosts, commStation.level)
-      commStation.populations = (commStation.level * (player.commStation.level + 1)) / 2
-      await player.save()
-      await commStation.save()
-      return { message: 'Comm Station upgraded successfully' }
-    } else {
-      throw new Error('Not enough resources to upgrade Comm Station')
+        const comms = new CommsStation({
+            taskActive: false,
+            upgradeDurationBase: COMMS_UPGRADE_DURATION,
+            upgradeDuration: COMMS_UPGRADE_DURATION,
+            upgradeCosts: {
+                metal: 1000,
+                crystal: 1000,
+                gas: 1000,
+                energy: 100
+            }
+        });
+
+        await comms.save();
+
+        res.status(201).send({ message: "Comms Station created successfully" })
+
+    } catch (error) {
+        res.status(500).send({ message: "Error creating Comms Station", error: error.message })
     }
- } catch (error) {
-    console.error(error)
-    throw error
- }
 }
+
+
+// Route to start upgrading the research lab
+const upgradeCommsStation = async (req, res) => {
+    try {
+
+        const { id } = req.params
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({ msg: 'Not a valid ID' })
+        }
+
+        const Lab = await CommsStation.findById(id)
+        if (!Lab) {
+            return res.status(404).json({ msg: 'Research Lab not found' })
+        }
+
+        const upgradeDuration = Lab.calculateUpgradeDuration()
+
+
+        const job = cron.schedule(`*/${upgradeDuration} * * * * *`, async (id) => {
+
+            const upgradedCommsStation = await CommsStation.findByIdAndUpdate(
+                id,
+                {
+                    $set: {
+                        level: (level + 1),
+                        taskActive: false,
+                        population: (level * (level + 1)),
+                        health: (100 * level),
+                        upgradeCosts: {
+                            metal: (level * 120),
+                            crystal: (level * 100),
+                            gas: (level * 80),
+                            energy: (level * 50),
+                        }
+
+                    }
+                },
+                { new: true }
+            );
+
+            await upgradedCommsStation.save()
+
+
+        });
+
+        res.status(200).json({ message: 'Comms Station upgraded successfully!' });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+//Get player's Comms Station
+
+const getCommsStation = async (req, res) => {
+    try {
+        const researchLab = await ResearchLab.find({})
+
+        if (!researchLab) {
+            return res.status(404).json({ msg: 'No Comms Station found' })``
+        }
+
+        res.status(200).json(commsStation)
+
+    } catch (error) {
+
+        res.status(500).json({ error: error.message })
+    }
+}
+
+
 
 module.exports = {
- createCommStationInstance,
- upgradeCommStation,
+   createCommsStation,
+   upgradeCommsStation,
+   getCommsStation
 }
 
 
 
-//Ethan please delete
-if (ResearchLab.level < 3) {
-    return res.status(400).json({ message: 'Requires Research Lab level 3!' });
-}
+
+
+
+
