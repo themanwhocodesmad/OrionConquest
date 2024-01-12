@@ -14,7 +14,7 @@ const TradeUpgradeCosts = {
 };
 
 module.exports = {
-    LAB_BASE_UPGRADE_DURATION,
-    LabUpgradeCosts,
+    TRADE_BASE_UPGRADE_DURATION,
+    TradeUpgradeCosts,
 
 }
