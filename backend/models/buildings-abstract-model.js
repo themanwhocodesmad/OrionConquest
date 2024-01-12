@@ -8,7 +8,7 @@ const buildingSchema = new Schema({
     health: { type: Number, default: 0 },
     upgradeDuration: { type: Number, default: 0 },
     upgradeDurationBase: { type: Number, default: 0 },
-    upgradeStartTime: { type: Number, default: 0 },
+    upgradeStartTime: { type: Number, default: Date.now() },
     taskId: { type: Number, default: 0 },
     upgradeCosts: {
         metal: { type: Number, default: 120 },
@@ -17,12 +17,12 @@ const buildingSchema = new Schema({
         energy: { type: Number, default: 5 },
     },
 }, { discriminatorKey: 'type' }) // Using 'type' as the discriminator key, this is what describes each "Type" of building you make
-                                // E.g Trade Port, Mine, Store, Shipyard etc
+// E.g Trade Port, Mine, Store, Shipyard etc
 
 
 // Method to calculate next upgrade duration
 // TODO Check if possible to define methods in another way
-buildingSchema.methods.calculateUpgradeDuration = function() {
+buildingSchema.methods.calculateUpgradeDuration = function () {
     // Arithmetic sum formula: n * (n + 1) / 2
     return this.upgradeDurationBase * (this.level * (this.level + 1) / 2)
 }

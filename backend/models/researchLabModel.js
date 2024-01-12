@@ -1,55 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Building = require('./buildings-abstract-model')
 
-// Define research field schema
-const researchFieldSchema = new Schema({
-    shipyardEfficiency: {
-        level: {
-            type: Number,
-            default: 0,
-            max: 20
-        },
-        rate: {
-            type: Number,
-            default: 0,
-            max: 100
-        },
-    },
-    impulseEngines: {
-
-        level: {
-            type: Number,
-            default: 0,
-            max: 20
-        },
-        rate: {
-            type: Number,
-            default: 0,
-            max: 100
-        },
-    },
-    alienTechnology: {
-        level: {
-            type: Number,
-            default: 0,
-            max: 10
-        },
-        rate: {
-            type: Number,
-            default: 0,
-            max: 100
-        },
-    },
-});
 
 // Research Lab Schema with research field schema
 const researchLabSchema = new Schema({
-    active: { type: Boolean, default: false },
-    research: [researchFieldSchema],
-});
+    taskActive: {
+        type: Boolean,
+        default: false
+    },
+
+})
 
 // Adding ResearchLab as a discriminator of Building
-const ResearchLab = Building.discriminator('ResearchLab', ResearchLabSchema)
+const ResearchLab = Building.discriminator('ResearchLab', researchLabSchema)
 
 module.exports = {
     ResearchLab
