@@ -6,7 +6,7 @@ const { MineTypes, MinesUpgradeCosts, MINES_BASE_UPGRADE_DURATION } = require('.
 // Controller function to CREATE all types of mines (POST)
 const createAllMines = async (req, res) => {
     try {
-         // Iterate over each type in the mineType enum
+        // Iterate over each type in the mineType enum
         const minePromises = Object.values(MineTypes).map(type => {
             const newMine = new Mine({
                 mineType: type,

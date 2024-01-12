@@ -8,7 +8,7 @@ const buildingSchema = new Schema({
     health: { type: Number, default: 0 },
     upgradeDuration: { type: Number, default: 0 },
     upgradeDurationBase: { type: Number, default: 0 },
-    upgradeStartTime: { type: Number, default: Date.now() },
+    upgradeStartTime: { type: Number, default: 0 },
     taskId: { type: Number, default: 0 },
     upgradeCosts: {
         metal: { type: Number, default: 120 },
