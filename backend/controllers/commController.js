@@ -1,18 +1,17 @@
-const { ResearchLab } = require('../models/researchLabModel');
-const cron = require('node-cron');
-const { COMMS_UPGRADE_DURATION } = require('../constants/comms-enum')
-const { Building } = require('../models/buildings-abstract-model')
+const { commStation } = require('../models/commStationModel');
+const { COMMS_BASE_UPGRADE_DURATION } = require('../constants/comms-enum')
+const mongoose = require('mongoose')
 
-// Controller function to CREATE a Research Lab
+// Controller function to CREATE a Research Lab (POST)
 const createCommsStation = async (req, res,) => {
 
 
     try {
 
-        const comms = new CommsStation({
+        const commsStation = new CommsStation({
             taskActive: false,
-            upgradeDurationBase: COMMS_UPGRADE_DURATION,
-            upgradeDuration: COMMS_UPGRADE_DURATION,
+            upgradeDurationBase: COMMS_BASE_UPGRADE_DURATION,
+            upgradeDuration: COMMS_BASE_UPGRADE_DURATION,
             upgradeCosts: {
                 metal: 1000,
                 crystal: 1000,
@@ -21,7 +20,7 @@ const createCommsStation = async (req, res,) => {
             }
         });
 
-        await comms.save();
+        await commsStation.save();
 
         res.status(201).send({ message: "Comms Station created successfully" })
 
@@ -31,66 +30,57 @@ const createCommsStation = async (req, res,) => {
 }
 
 
-// Route to start upgrading the research lab
+// Route to start upgrading the comms station (PUT)
 const upgradeCommsStation = async (req, res) => {
     try {
-
         const { id } = req.params
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(404).json({ msg: 'Not a valid ID' })
+            return res.status(404).json({ msg: 'This is not a valid ID' })
         }
 
-        const Lab = await CommsStation.findById(id)
-        if (!Lab) {
-            return res.status(404).json({ msg: 'Research Lab not found' })
+        const Comms = await CommsStation.findById(id)
+        if (!Comms) {
+            return res.status(404).json({ msg: 'Comms Station not found' })
         }
 
-        const upgradeDuration = Lab.calculateUpgradeDuration()
+        // Increment the level of the Comms
+        Comms.level += 1
+
+        // Update other properties
+        Comms.populations = (Comms.level * (Comms.level + 1)) / 2 // Arithmetic sum of the current level
+        Comms.productionRate = 5 * Comms.level
+        Comms.health = 100 * Comms.level
+
+        // Calculate and update upgrade duration
+        Comms.upgradeDuration = Comms.calculateUpgradeDuration()
+
+        // Update upgradeCosts
+        // Assuming Comms.upgradeCosts is an object
+        Comms.upgradeCosts.metal += Comms.level * 120
+        Comms.upgradeCosts.crystal += Comms.level * 100
+        Comms.upgradeCosts.gas += Comms.level * 80
+        Comms.upgradeCosts.energy += Comms.level * 50
 
 
-        const job = cron.schedule(`*/${upgradeDuration} * * * * *`, async (id) => {
+        await Comms.save()
 
-            const upgradedCommsStation = await CommsStation.findByIdAndUpdate(
-                id,
-                {
-                    $set: {
-                        level: (level + 1),
-                        taskActive: false,
-                        population: (level * (level + 1)),
-                        health: (100 * level),
-                        upgradeCosts: {
-                            metal: (level * 120),
-                            crystal: (level * 100),
-                            gas: (level * 80),
-                            energy: (level * 50),
-                        }
-
-                    }
-                },
-                { new: true }
-            );
-
-            await upgradedCommsStation.save()
-
-
-        });
-
-        res.status(200).json({ message: 'Comms Station upgraded successfully!' });
-
+        res.status(200).json({ msg: 'Comms Station upgraded successfully', Comms: Comms })
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ error: error.message })
     }
-};
+}
 
-//Get player's Comms Station
+
+
+//Get player's Comms Station (GET)
 
 const getCommsStation = async (req, res) => {
     try {
-        const researchLab = await ResearchLab.find({})
+        const commsStation = await CommsStation.find({})
 
-        if (!researchLab) {
-            return res.status(404).json({ msg: 'No Comms Station found' })``
+        if (!commsStation) {
+            return res.status(404).json({ msg: 'No Research Comms Station' })``
         }
 
         res.status(200).json(commsStation)
@@ -104,9 +94,9 @@ const getCommsStation = async (req, res) => {
 
 
 module.exports = {
-   createCommsStation,
-   upgradeCommsStation,
-   getCommsStation
+    createCommsStation,
+    upgradeCommsStation,
+    getCommsStation
 }
 
 
