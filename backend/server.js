@@ -4,6 +4,7 @@ const mineRoutes = require('./routes/mines-routes')
 const storeRoutes = require('./routes/stores-routes')
 const researchLabRoutes = require('./routes/researchLab-routes')
 
+
 const { default: mongoose } = require('mongoose')
 
 

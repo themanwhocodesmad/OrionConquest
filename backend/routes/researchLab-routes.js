@@ -7,10 +7,10 @@ const {
 
 
 // get an instance of Research Lab (GET)
-router.get('/all', getResearchLab);
+router.get('/:id', getResearchLab);
 // create an instance of Research Lab (POST)
 router.post('/create', createResearchLab);
 // upgrade Research Lab (PUT)
-router.patch('/:Id', upgradeResearchLab);
+router.put('/:id', upgradeResearchLab);
 
 module.exports = router;

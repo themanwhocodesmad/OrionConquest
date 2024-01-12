@@ -1,9 +1,8 @@
 const { ResearchLab } = require('../models/researchLabModel');
-const cron = require('node-cron');
 const { LAB_BASE_UPGRADE_DURATION } = require('../constants/lab - enum')
-const { Building } = require('../models/buildings-abstract-model')
+const mongoose = require('mongoose')
 
-// Controller function to CREATE a Research Lab
+// Controller function to CREATE a Research Lab (POST)
 const createResearchLab = async (req, res,) => {
 
 
@@ -31,14 +30,13 @@ const createResearchLab = async (req, res,) => {
 }
 
 
-// Route to start upgrading the research lab
+// Route to start upgrading the research lab (PUT)
 const upgradeResearchLab = async (req, res) => {
     try {
-
         const { id } = req.params
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(404).json({ msg: 'Not a valid ID' })
+            return res.status(404).json({ msg: 'This is not a valid ID' })
         }
 
         const Lab = await ResearchLab.findById(id)
@@ -46,44 +44,36 @@ const upgradeResearchLab = async (req, res) => {
             return res.status(404).json({ msg: 'Research Lab not found' })
         }
 
-        const upgradeDuration = Lab.calculateUpgradeDuration()
+        // Increment the level of the Lab
+        Lab.level += 1
+
+        // Update other properties
+        Lab.populations = (Lab.level * (Lab.level + 1)) / 2 // Arithmetic sum of the current level
+        Lab.productionRate = 5 * Lab.level
+        Lab.health = 100 * Lab.level
+
+        // Calculate and update upgrade duration
+        Lab.upgradeDuration = Lab.calculateUpgradeDuration()
+
+        // Update upgradeCosts
+        // Assuming Lab.upgradeCosts is an object
+        Lab.upgradeCosts.metal += Lab.level * 120
+        Lab.upgradeCosts.crystal += Lab.level * 100
+        Lab.upgradeCosts.gas += Lab.level * 80
+        Lab.upgradeCosts.energy += Lab.level * 50
 
 
-        const job = cron.schedule(`*/${upgradeDuration} * * * * *`, async (id) => {
+        await Lab.save()
 
-            const upgradedResearchLab = await ResearchLab.findByIdAndUpdate(
-                id,
-                {
-                    $set: {
-                        level: (level + 1),
-                        taskActive: false,
-                        population: (level * (level + 1)),
-                        health: (100 * level),
-                        upgradeCosts: {
-                            metal: (level * 120),
-                            crystal: (level * 100),
-                            gas: (level * 80),
-                            energy: (level * 50),
-                        }
-
-                    }
-                },
-                { new: true }
-            );
-
-            await upgradedResearchLab.save()
-
-
-        });
-
-        res.status(200).json({ message: 'Research lab upgraded successfully!' });
-
+        res.status(200).json({ msg: 'Research Lab upgraded successfully', Lab: Lab })
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ error: error.message })
     }
-};
+}
 
-//Get player's Research Lab
+
+
+//Get player's Research Lab (GET)
 
 const getResearchLab = async (req, res) => {
     try {
