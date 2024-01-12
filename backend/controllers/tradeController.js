@@ -1,37 +1,37 @@
-const { ResearchLab } = require('../models/researchLabModel');
-const { LAB_BASE_UPGRADE_DURATION } = require('../constants/lab - enum')
+const { tradeDepot } = require('../models/tradeDepotModel');
+const { TRADE_BASE_UPGRADE_DURATION } = require('../constants/lab - enum')
 const mongoose = require('mongoose')
 
 // Controller function to CREATE a Research Lab (POST)
-const createResearchLab = async (req, res,) => {
+const createTradeDepot = async (req, res,) => {
 
 
     try {
 
-        const researchLab = new ResearchLab({
+        const trade = new tradeDepot({
             taskActive: false,
-            upgradeDurationBase: LAB_BASE_UPGRADE_DURATION,
-            upgradeDuration: LAB_BASE_UPGRADE_DURATION,
+            upgradeDurationBase: TRADE_BASE_UPGRADE_DURATION,
+            upgradeDuration: TRADE_BASE_UPGRADE_DURATION,
             upgradeCosts: {
-                metal: 1000,
-                crystal: 1000,
-                gas: 1000,
+                metal: 3000,
+                crystal: 3000,
+                gas: 3000,
                 energy: 100
             }
         });
 
-        await researchLab.save();
+        await trade.save();
 
-        res.status(201).send({ message: "Research Lab created successfully" })
+        res.status(201).send({ message: "Trade Depot created successfully" })
 
     } catch (error) {
-        res.status(500).send({ message: "Error creating Research Lab", error: error.message })
+        res.status(500).send({ message: "Error creating Trade Depot", error: error.message })
     }
 }
 
 
 // Route to start upgrading the research lab (PUT)
-const upgradeResearchLab = async (req, res) => {
+const upgradeTradeDepot = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -39,33 +39,33 @@ const upgradeResearchLab = async (req, res) => {
             return res.status(404).json({ msg: 'This is not a valid ID' })
         }
 
-        const Lab = await ResearchLab.findById(id)
-        if (!Lab) {
-            return res.status(404).json({ msg: 'Research Lab not found' })
+        const tradeDep = await tradeDepot.findById(id)
+        if (!tradeDep) {
+            return res.status(404).json({ msg: 'Trade Depot not found' })
         }
 
-        // Increment the level of the Lab
-        Lab.level += 1
+        // Increment the level of the depot
+        tradeDep.level += 1
 
         // Update other properties
-        Lab.populations = (Lab.level * (Lab.level + 1)) / 2 // Arithmetic sum of the current level
-        Lab.productionRate = 5 * Lab.level
-        Lab.health = 100 * Lab.level
+        tradeDep.populations = (tradeDep.level * (Lab.level + 1)) / 2 // Arithmetic sum of the current level
+        tradeDep.productionRate = 5 * tradeDep.level
+        tradeDep.health = 100 * tradeDep.level
 
         // Calculate and update upgrade duration
-        Lab.upgradeDuration = Lab.calculateUpgradeDuration()
+        tradeDep.upgradeDuration = tradeDep.calculateUpgradeDuration()
 
         // Update upgradeCosts
-        // Assuming Lab.upgradeCosts is an object
-        Lab.upgradeCosts.metal += Lab.level * 120
-        Lab.upgradeCosts.crystal += Lab.level * 100
-        Lab.upgradeCosts.gas += Lab.level * 80
-        Lab.upgradeCosts.energy += Lab.level * 50
+        // Assuming Depot.upgradeCosts is an object
+        tradeDep.upgradeCosts.metal += tradeDep.level * 120
+        tradeDep.upgradeCosts.crystal += tradeDep.level * 100
+        tradeDep.upgradeCosts.gas += tradeDep.level * 80
+        tradeDep.upgradeCosts.energy += tradeDep.level * 50
 
 
-        await Lab.save()
+        await tradeDep.save()
 
-        res.status(200).json({ msg: 'Research Lab upgraded successfully', Lab: Lab })
+        res.status(200).json({ msg: 'Trade Depot upgraded successfully', tradeDep: tradeDep })
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -73,17 +73,17 @@ const upgradeResearchLab = async (req, res) => {
 
 
 
-//Get player's Research Lab (GET)
+//Get player's Trade Depot (GET)
 
-const getResearchLab = async (req, res) => {
+const getTradeDepot = async (req, res) => {
     try {
-        const researchLab = await ResearchLab.find({})
+        const tradeDep = await tradeDepot.find({})
 
-        if (!researchLab) {
+        if (!tradeDep) {
             return res.status(404).json({ msg: 'No Research Lab found' })``
         }
 
-        res.status(200).json(researchLab)
+        res.status(200).json(tradeDep)
 
     } catch (error) {
 
@@ -94,14 +94,7 @@ const getResearchLab = async (req, res) => {
 
 
 module.exports = {
-    createResearchLab,
-    upgradeResearchLab,
-    getResearchLab
+    createTradeDepot,
+    upgradeTradeDepot,
+    getTradeDepot
 }
-
-
-
-
-
-
-
