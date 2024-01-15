@@ -8,6 +8,7 @@ const tradeRoutes = require('./routes/trade-routes');
 const shieldRoutes = require('./routes/shield-routes');
 const commsRoutes = require('./routes/comms-routes');
 const loginRoutes = require('./routes/user-routes')
+const cors = require('cors');
 
 
 
@@ -25,6 +26,10 @@ app.use((req, res, next) => {
     console.log(req.path, req.method)
     next()
 })
+//Cors middleware
+app.use(cors({
+    origin: 'http://localhost:3000', // Allow requests from this specific origin
+}));
 
 // routes
 
