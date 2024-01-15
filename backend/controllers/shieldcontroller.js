@@ -8,7 +8,7 @@ const createShield = async (req, res,) => {
 
     try {
 
-        const shield = new Shield({
+        const Shields = new shield({
             taskActive: false,
             upgradeDurationBase: SHIELD_BASE_UPGRADE_DURATION,
             upgradeDuration: SHIELD_BASE_UPGRADE_DURATION,
@@ -20,7 +20,7 @@ const createShield = async (req, res,) => {
             }
         });
 
-        await shield.save();
+        await Shields.save();
 
         res.status(201).send({ message: "Shield created successfully" })
 
@@ -39,33 +39,33 @@ const upgradeShield = async (req, res) => {
             return res.status(404).json({ msg: 'This is not a valid ID' })
         }
 
-        const Shield = await Shield.findById(id)
-        if (!Shield) {
+        const Shields = await shield.findById(id)
+        if (!Shields) {
             return res.status(404).json({ msg: 'Shield not found' })
         }
 
         // Increment the level of the Shield
-        Shield.level += 1
+        Shields.level += 1
 
         // Update other properties
-        Shield.populations = (Shield.level * (Shield.level + 1)) / 2 // Arithmetic sum of the current level
-        Shield.productionRate = 5 * Shield.level
-        Shield.health = 100 * Shield.level
+        Shields.populations = (Shields.level * (Shields.level + 1)) / 2 // Arithmetic sum of the current level
+        Shields.productionRate = 5 * Shields.level
+        Shields.health = 100 * Shields.level
 
         // Calculate and update upgrade duration
-        Shield.upgradeDuration = Shield.calculateUpgradeDuration()
+        Shields.upgradeDuration = Shields.calculateUpgradeDuration()
 
         // Update upgradeCosts
         // Assuming Shield.upgradeCosts is an object
-        Shield.upgradeCosts.metal += Shield.level * 120
-        Shield.upgradeCosts.crystal += Shield.level * 100
-        Shield.upgradeCosts.gas += Shield.level * 80
-        Shield.upgradeCosts.energy += Shield.level * 50
+        Shields.upgradeCosts.metal += Shields.level * 120
+        Shields.upgradeCosts.crystal += Shields.level * 100
+        Shields.upgradeCosts.gas += Shields.level * 80
+        Shields.upgradeCosts.energy += Shields.level * 50
 
 
-        await Shield.save()
+        await Shields.save()
 
-        res.status(200).json({ msg: 'Shield upgraded successfully', Shield: Shield })
+        res.status(200).json({ msg: 'Shield upgraded successfully', Shields: Shields })
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -77,13 +77,13 @@ const upgradeShield = async (req, res) => {
 
 const getShield = async (req, res) => {
     try {
-        const shield = await Shield.find({})
+        const Shields = await shield.find({})
 
-        if (!shield) {
-            return res.status(404).json({ msg: 'No Research Shield' })``
+        if (!Shields) {
+            return res.status(404).json({ msg: 'No Shield' })``
         }
 
-        res.status(200).json(shield)
+        res.status(200).json(Shields)
 
     } catch (error) {
 
