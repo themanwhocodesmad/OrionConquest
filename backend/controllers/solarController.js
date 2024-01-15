@@ -8,7 +8,7 @@ const createSolarArray = async (req, res,) => {
 
     try {
 
-        const solarArray = new SolarArray({
+        const solar = new solarArray({
             taskActive: false,
             upgradeDurationBase: SOLAR_BASE_UPGRADE_DURATION,
             upgradeDuration: SOLAR_BASE_UPGRADE_DURATION,
@@ -20,7 +20,7 @@ const createSolarArray = async (req, res,) => {
             }
         });
 
-        await solarArray.save();
+        await solar.save();
 
         res.status(201).send({ message: "Solar Array created successfully" })
 
@@ -39,33 +39,33 @@ const upgradeSolarArray = async (req, res) => {
             return res.status(404).json({ msg: 'This is not a valid ID' })
         }
 
-        const solar = await SolarArray.findById(id)
-        if (!solar) {
+        const Solar = await solarArray.findById(id)
+        if (!Solar) {
             return res.status(404).json({ msg: 'Solar Array not found' })
         }
 
         // Increment the level of the solar
-        soalr.level += 1
+        Solar.level += 1
 
         // Update other properties
-        solar.populations = (solar.level * (solar.level + 1)) / 2 // Arithmetic sum of the current level
-        solar.productionRate = 5 * solar.level
-        solar.health = 100 * solar.level
+        Solar.populations = (Solar.level * (Solar.level + 1)) / 2 // Arithmetic sum of the current level
+        Solar.productionRate = 5 * Solar.level
+        Solar.health = 100 * Solar.level
 
         // Calculate and update upgrade duration
-        solar.upgradeDuration = solar.calculateUpgradeDuration()
+        Solar.upgradeDuration = Solar.calculateUpgradeDuration()
 
         // Update upgradeCosts
-        // Assuming solar.upgradeCosts is an object
-        solar.upgradeCosts.metal += solar.level * 120
-        solar.upgradeCosts.crystal += solar.level * 100
-        solar.upgradeCosts.gas += solar.level * 80
-        solar.upgradeCosts.energy += solar.level * 50
+        // Assuming Solar.upgradeCosts is an object
+        Solar.upgradeCosts.metal += Solar.level * 120
+        Solar.upgradeCosts.crystal += Solar.level * 100
+        Solar.upgradeCosts.gas += Solar.level * 80
+        Solar.upgradeCosts.energy += Solar.level * 50
 
 
-        await solar.save()
+        await Solar.save()
 
-        res.status(200).json({ msg: 'Research solar upgraded successfully', solar: solar })
+        res.status(200).json({ msg: 'Solar Array upgraded successfully', Solar: Solar })
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -77,13 +77,13 @@ const upgradeSolarArray = async (req, res) => {
 
 const getSolarArray = async (req, res) => {
     try {
-        const solarArray = await SolarArray.find({})
+        const solar = await solarArray.find({})
 
-        if (!solarArray) {
+        if (!solar) {
             return res.status(404).json({ msg: 'No Solar Array found' })``
         }
 
-        res.status(200).json(solarArray)
+        res.status(200).json(solar)
 
     } catch (error) {
 

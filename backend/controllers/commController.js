@@ -8,7 +8,7 @@ const createCommsStation = async (req, res,) => {
 
     try {
 
-        const commsStation = new CommsStation({
+        const comms = new commStation({
             taskActive: false,
             upgradeDurationBase: COMMS_BASE_UPGRADE_DURATION,
             upgradeDuration: COMMS_BASE_UPGRADE_DURATION,
@@ -20,7 +20,7 @@ const createCommsStation = async (req, res,) => {
             }
         });
 
-        await commsStation.save();
+        await comms.save();
 
         res.status(201).send({ message: "Comms Station created successfully" })
 
@@ -39,7 +39,7 @@ const upgradeCommsStation = async (req, res) => {
             return res.status(404).json({ msg: 'This is not a valid ID' })
         }
 
-        const Comms = await CommsStation.findById(id)
+        const Comms = await commStation.findById(id)
         if (!Comms) {
             return res.status(404).json({ msg: 'Comms Station not found' })
         }
@@ -77,13 +77,13 @@ const upgradeCommsStation = async (req, res) => {
 
 const getCommsStation = async (req, res) => {
     try {
-        const commsStation = await CommsStation.find({})
+        const comms = await commStation.find({})
 
-        if (!commsStation) {
+        if (!comms) {
             return res.status(404).json({ msg: 'No Research Comms Station' })``
         }
 
-        res.status(200).json(commsStation)
+        res.status(200).json(comms)
 
     } catch (error) {
 

@@ -48,7 +48,7 @@ const upgradeTradeDepot = async (req, res) => {
         tradeDep.level += 1
 
         // Update other properties
-        tradeDep.populations = (tradeDep.level * (Lab.level + 1)) / 2 // Arithmetic sum of the current level
+        tradeDep.populations = (tradeDep.level * (tradeDep.level + 1)) / 2 // Arithmetic sum of the current level
         tradeDep.productionRate = 5 * tradeDep.level
         tradeDep.health = 100 * tradeDep.level
 
