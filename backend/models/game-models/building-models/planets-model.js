@@ -13,8 +13,8 @@ const planetSchema = new Schema({
     population: { type: Number, default: 0 },
     coordinates: {type: String, unique: true},
     name: { type: String, default: generateInitialPlanetRandomName() }, // TODO function to generate random name
-    occupied: {type:Boolean, default:false}
-    // owner: { type: Schema.Types.ObjectId, ref: 'User' } // TODO tie this model to a user
+    occupied: {type:Boolean, default:false}, 
+    owner: { type: Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true })
 
 // Ensure unique combination of galaxy and planetNumber

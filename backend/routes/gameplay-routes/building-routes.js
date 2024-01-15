@@ -8,4 +8,5 @@ router.post('/upgrade/:id', queueBuildingsForUpgrade)
 // Route to cancel a building upgrade (WIP)
 router.post('/cancel-upgrade/:id', cancelBuildingUpgrade)
 
+
 module.exports = router

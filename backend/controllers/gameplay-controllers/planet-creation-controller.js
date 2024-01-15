@@ -85,5 +85,29 @@ const createAdditionalPlanet = async (req, res) => {
 }
 }
 
+const getPlanetById = async (req, res) => {
+    // Retrieve planet ID from the request parameters
+    const id = req.params.id;
+
+    // Retrieve the currently authenticated user
+    const userId = req.user._id;
+
+    try {
+        // Find the planet by ID and check if the owner matches the user's ID
+        const planet = await Planet.findOne({ _id: id, owner: userId });
+
+        if (!planet) {
+            // No planet found or the planet does not belong to the user
+            return res.status(404).json({ message: 'Planet not found or access denied' });
+        }
+
+        // Planet found and belongs to the user, return the planet data
+        res.json(planet);
+    } catch (error) {
+        console.error('Error fetching planet:', error);
+        res.status(500).json({ message: 'Error fetching planet data' });
+    }
+};
+
 module.exports = {
-    createInitialPlanet, createAdditionalPlanet}
+    createInitialPlanet, createAdditionalPlanet, getPlanetById }
