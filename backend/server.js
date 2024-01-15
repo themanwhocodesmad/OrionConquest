@@ -7,6 +7,7 @@ const solarRoutes = require('./routes/solar-routes');
 const tradeRoutes = require('./routes/trade-routes');
 const shieldRoutes = require('./routes/shield-routes');
 const commsRoutes = require('./routes/comms-routes');
+const loginRoutes = require('./routes/user-routes')
 
 
 
@@ -34,10 +35,11 @@ app.use('/api/solarArray', solarRoutes)
 app.use('/api/tradeDepot', tradeRoutes)
 app.use('/api/shield', shieldRoutes)
 app.use('/api/comms', commsRoutes)
+app.use('/api/users', loginRoutes) //includes registration
 
 
 // connect to MongoDB
-mongoose.connect(process.env.mongo_ethan)
+mongoose.connect(process.env.mongo_uri_shane)
     .then(() => {
         // Listen for requests once we have connect to DB
         app.listen(process.env.PORT_Shane, () => {
