@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 
 // Apply isLoggedIn middleware to protect all subsequent routes
-app.use(isLoggedIn);
+//app.use(isLoggedIn);
 
 // Protected Routes
 app.use('/api/planet', planetRoutes);

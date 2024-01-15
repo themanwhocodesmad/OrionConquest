@@ -2,6 +2,7 @@ const Armoury = require('../../models/game-models/armoury-models/armoury-model')
 const ConstructionQueue = require('../../models/game-models/armoury-models/construction-queue-model');
 const Troop = require('../../models/game-models/armoury-models/troops-abstract-model');
 const checkAndDeductResourcesForTroops = require("../../helpers/troop-construction-related");
+const { Store } = require('../../models/game-models/general-building-models/stores-model');
 
 
 const queueTroopsForConstruction = async (req, res) => {
@@ -20,7 +21,14 @@ const queueTroopsForConstruction = async (req, res) => {
             return res.status(400).send('Invalid troop type.');
         }
 
-        // Check resources and other business logic...
+        
+        // Fetch all stores associated with the planet
+        const stores = await Store.find({ planet: armoury.planet._id })
+
+        if (stores.length !== 3) { // There are exactly 3 stores per planet
+            return res.status(404).send({ message: 'Stores not found or incomplete on planet' })
+        } 
+
         // Check for each resource in the construction costs using resourceCheck function
         const canConstruct = await checkAndDeductResourcesForTroops(stores, troopType, quantityToAdd);
         if (!canConstruct) {
