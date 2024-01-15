@@ -16,7 +16,7 @@ async function calculateUpgradeStartAndEndTimes(newBuildingDetails) {
 
     let totalDuration = 0
     queuedBuildings.forEach(building => {
-        totalDuration += 1000*building.upgradeDuration // milliseconds to seconds
+        totalDuration += 1000 * building.upgradeDuration // milliseconds to seconds
     })
 
     // Calculating start time for the new building upgrade
@@ -24,6 +24,7 @@ async function calculateUpgradeStartAndEndTimes(newBuildingDetails) {
 
     // Calculating end time for the new building upgrade
     const upgradeEndTime = new Date(upgradeStartTime.getTime() + 1000*newBuildingDetails.upgradeDuration)
+    console.log('upgrade Time:.............', upgradeEndTime)
 
     // Creating new queue item with calculated start and end times
     const newQueueItem = new BuildingQueue({

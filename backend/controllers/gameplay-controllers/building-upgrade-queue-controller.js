@@ -13,6 +13,7 @@ const queueBuildingsForUpgrade = async (req, res) => {
 
         // Check for all resources and then subtract them if there are sufficient
         const allResourcesSufficient = await checkAndDeductResourcesForUpgrade(building)
+        
         if (!allResourcesSufficient) {
             return res.status(400).send({ message: 'Insufficient resources for upgrade' })
         }
