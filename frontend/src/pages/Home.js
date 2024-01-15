@@ -7,7 +7,7 @@ import MineDetails from "../components/MinesDetails";
 import { useMinesContext } from "../hooks/useMineContext";
 
 const Home = () => {
-    const {mines, dispatch} = useMinesContext()
+    const { mines, dispatch } = useMinesContext()
 
     useEffect(() => {
         const fetchMines = async () => {
@@ -19,7 +19,7 @@ const Home = () => {
                 const json = await response.json();
 
                 // Update State with mines
-                dispatch({type:'SET_MINES', payload: json})
+                dispatch({ type: 'SET_MINES', payload: json })
 
             } catch (error) {
 
@@ -35,7 +35,7 @@ const Home = () => {
         <div className="Home">
             <div className="mines">
                 {mines && mines.map((mine) => (
-                    <MineDetails key={mine._id} mine={mine}/>
+                    <MineDetails key={mine._id} mine={mine} />
                 ))}
             </div>
         </div>
