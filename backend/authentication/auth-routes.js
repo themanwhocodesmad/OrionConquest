@@ -15,4 +15,10 @@ router.get('/google/failure', (req, res) => {
   res.send('Failed to authenticate..');
 });
 
+//Check authentication in front end
+router.get('/check-authentication', (req, res) => {
+  res.json({ isAuthenticated: req.isAuthenticated() });
+});
+
+
 module.exports = router;

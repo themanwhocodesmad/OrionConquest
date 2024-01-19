@@ -1,26 +1,25 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
-
-
-// pages and components
-import Home from './pages/Home'
-import Navbar from './components/Navbar';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from '../src/context/auth-context'
+import SignIn from '../src/pages/authentication/sign-in-page';
+import Welcome from '../src/pages/welcome';
+import ProtectedRoute from '../src/components/authentication/protected-routes-component';
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-      <Navbar/>
-      <div className='pages'>
+    <AuthProvider> 
+      <Router>
         <Routes>
-          <Route
-            path='/'
-            element={<Home />}
-          />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/welcome" element={
+            <ProtectedRoute>
+              <Welcome />
+            </ProtectedRoute>
+          } />
+          {/* other routes */}
         </Routes>
-      </div>
-      </BrowserRouter>
-      
-    </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

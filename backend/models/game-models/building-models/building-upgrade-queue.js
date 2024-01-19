@@ -1,10 +1,8 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const buildingQueueSchema = new Schema({
-    name: { type: String,
-         required: true
-    },
+    name: { type: String, required: true },
     planet: { 
         type: Schema.Types.ObjectId, 
         ref: 'Planet',
@@ -39,7 +37,19 @@ const buildingQueueSchema = new Schema({
     upgradeEndTime: {
         type: Date
     }
-});
+})
+
+// Index for queuedAt
+buildingQueueSchema.index({ queuedAt: 1 })
+
+// Index for status
+buildingQueueSchema.index({ status: 1 })
+
+// Compound index for status and queuedAt
+buildingQueueSchema.index({ status: 1, queuedAt: 1 })
+
+// Index for upgradeEndTime, if frequently queried or sorted
+buildingQueueSchema.index({ upgradeEndTime: 1 })
 
 const BuildingQueue = mongoose.model('BuildingQueue', buildingQueueSchema)
 

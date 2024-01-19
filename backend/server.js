@@ -12,6 +12,7 @@ const { isLoggedIn } = require('./authentication/auth-controllers');
 const authRoutes = require('./authentication/auth-routes');
 
 // Gameplay related route imports
+const userRoutes = require('./routes/player-related/player-related-routes')
 const buildingRoutes = require('./routes/gameplay-routes/building-routes');
 const fleetRoutes = require('./routes/gameplay-routes/fleet-routes');
 const armouryRoutes = require('./routes/gameplay-routes/armoury-routes');
@@ -31,6 +32,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Middleware
+//app.use(cors())
 app.use(express.json());
 app.use((req, res, next) => {
     console.log(req.path, req.method);
@@ -44,6 +46,7 @@ app.use('/auth', authRoutes);
 //app.use(isLoggedIn);
 
 // Protected Routes
+app.use('/api/user', userRoutes);
 app.use('/api/planet', planetRoutes);
 app.use('/api/armoury', armouryRoutes);
 app.use('/api/building', buildingRoutes);
