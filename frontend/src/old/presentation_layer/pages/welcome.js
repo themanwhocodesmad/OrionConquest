@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/auth-context';
-import ScrollerComponent from '../components/welcome/scroller-component.js';
-import PlayerNameInitiation from '../components/welcome/playername-initiation.js';
+import { AuthContext } from '../../business_logic_layer/context/auth-context.js';
+import ScrollerComponent from '../../../components/welcome/scroller-component.js';
+import PlayerNameInitiation from '../../../components/welcome/playername-initiation.js';
 
 function Welcome() {
     const { user } = useContext(AuthContext);

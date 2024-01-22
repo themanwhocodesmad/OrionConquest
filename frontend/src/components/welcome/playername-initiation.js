@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { AuthContext } from '../../context/auth-context';
+import { AuthContext } from '../../old/business_logic_layer/context/auth-context';
 import { createInitialPlanet } from '../../network-services/api-service';
 import './playername-initiation.css';
 
