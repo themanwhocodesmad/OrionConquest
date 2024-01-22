@@ -1,32 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { getUserPlanets } from '../network-services/api-service';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/auth-context';
+import ScrollerComponent from '../components/welcome/scroller-component.js';
+import PlayerNameInitiation from '../components/welcome/playername-initiation.js';
 
 function Welcome() {
-  const [planets, setPlanets] = useState([]);
-  const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [initiatePlayerName, setInitiatePlayerName] = useState(false);
 
-  useEffect(() => {
-    getUserPlanets()
-      .then(setPlanets)
-      .catch(error => console.error('Error fetching planets:', error));
-  }, []);
+    useEffect(() => {
+        if (user && user.hasPlanet) {
+            navigate('/home');
+        }
+    }, [user, navigate]);
 
-  const handleStartAdventure = () => {
-    navigate('/planet/initial');
-  };
+    const handleStartClick = () => {
+        setInitiatePlayerName(true);
+    };
 
-  return (
-    <div>
-      <h1>Welcome to the Space Themed Strategy Game</h1>
-      <ul>
-        {planets.map(planet => (
-          <li key={planet._id}>{planet.name}</li>
-        ))}
-      </ul>
-      <button onClick={handleStartAdventure}>Start the Adventure</button>
-    </div>
-  );
+    return (
+        <div>
+            <h1>Welcome, {user ? user.displayName : 'Guest'}</h1>
+            {!initiatePlayerName ? (
+                <ScrollerComponent onStartClick={handleStartClick} />
+            ) : (
+                <PlayerNameInitiation />
+            )}
+        </div>
+    );
 }
 
 export default Welcome;

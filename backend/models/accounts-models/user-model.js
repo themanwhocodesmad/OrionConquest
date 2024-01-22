@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
   googleId: {
@@ -6,6 +7,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  player: { type: Schema.Types.ObjectId, ref: 'Player' },
   displayName: {
     type: String,
     required: true,

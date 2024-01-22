@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoStore = require('connect-mongo'); // Import connect-mongo
 const passport = require('passport');
 require('./authentication/passport');
 
@@ -12,6 +13,7 @@ const { isLoggedIn } = require('./authentication/auth-controllers');
 const authRoutes = require('./authentication/auth-routes');
 
 // Gameplay related route imports
+const Homeroutes = require('./routes/player-related/home-routes')
 const userRoutes = require('./routes/player-related/player-related-routes')
 const buildingRoutes = require('./routes/gameplay-routes/building-routes');
 const fleetRoutes = require('./routes/gameplay-routes/fleet-routes');
@@ -27,7 +29,16 @@ const startUpgradeQueueSchedular = require('./schedulers/building-queue-schedula
 const app = express();
 
 // start express session
-app.use(session({ secret: process.env.SESSION_SECRET }));
+app.use(session({
+    secret: process.env.SESSION_SECRET, // Secret used to sign the session ID cookie
+    resave: false, // Don't save session if unmodified
+    saveUninitialized: false, // Don't create session until something stored
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }), // Use MongoDB for session store
+    cookie: {
+      httpOnly: true, // Prevents client side JS from reading the cookie 
+      secure: false, // Should be true in production with HTTPS
+    }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -35,7 +46,7 @@ app.use(passport.session());
 //app.use(cors())
 app.use(express.json());
 app.use((req, res, next) => {
-    console.log(req.path, req.method);
+    console.log(req.path, req.method, req.body);
     next();
 });
 
@@ -47,6 +58,7 @@ app.use('/auth', authRoutes);
 
 // Protected Routes
 app.use('/api/user', userRoutes);
+app.use('/', Homeroutes)
 app.use('/api/planet', planetRoutes);
 app.use('/api/armoury', armouryRoutes);
 app.use('/api/building', buildingRoutes);

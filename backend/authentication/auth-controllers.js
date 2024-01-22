@@ -6,47 +6,32 @@ const Planet = require('../models/game-models/building-models/planets-model')
 const googleAuthCallback = (req, res, next) => {
   passport.authenticate('google', async (err, user, info) => {
     if (err) {
-      return next(err)
+      return res.status(500).json({ error: err.message });
     }
     if (!user) {
-      return res.redirect('/auth/google/failure')
+      return res.status(401).json({ error: 'Authentication failed' });
     }
 
     req.login(user, async (loginErr) => {
       if (loginErr) {
-        return next(loginErr)
+        return res.status(500).json({ error: loginErr.message });
       }
 
-      // Check if the user already has a planet
       try {
-        const existingPlanet = await Planet.findOne({ owner: user._id }).sort({ createdAt: 1 })
+        const existingPlanet = await Planet.findOne({ owner: user._id }).sort({ createdAt: 1 });
 
-        if (existingPlanet) {
-          // Redirect to the planet's page
-          res.redirect('/planet/' + existingPlanet._id)
-        } else {
-          // If no planet exists, send a custom HTML response
-          const htmlContent = `
-            <html>
-              <head><title>Welcome</title></head>
-              <body>
-                <h1>Welcome, ${user.displayName}</h1>
-                <form action="/api/planet/initial" method="post">
-                    <input type="submit" value="Create your new Planet" />
-                </form>
+        // Redirect to the frontend with the authentication status
+        const frontendUrl = 'http://localhost:3000'; // Replace with your frontend URL
+        res.redirect(`${frontendUrl}/auth-callback?hasPlanet=${!!existingPlanet}`);
 
-              </body>
-            </html>
-          `
-          res.send(htmlContent)
-        }
       } catch (planetErr) {
-        console.error('Error in finding/creating a planet:', planetErr)
-        res.redirect('/error')
+        console.error('Error in finding/creating a planet:', planetErr);
+        res.status(500).json({ error: 'Server error in planet check' });
       }
-    })
-  })(req, res, next)
-}
+    });
+  })(req, res, next);
+};
+
 
 
 const entryPoint = (req, res) => {
