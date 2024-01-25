@@ -36,6 +36,8 @@ const userSchema = new mongoose.Schema({
   },
   roles: [String],
 
+  hasPlanets: {type:Boolean, default: false}
+
 });
 
 const User = mongoose.model('User', userSchema);

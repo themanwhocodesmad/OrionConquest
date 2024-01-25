@@ -42,7 +42,6 @@ buildingSchema.methods.calculateUpgradeDuration = function() {
     return this.upgradeDurationBase * (this.level * (this.level + 1) / 2)
 }
 
-// Method to calculate next upgrade duration
 // TODO Check if possible to define methods in another way
 buildingSchema.methods.calculateBuildingPopulation = function() {
     // Arithmetic sum formula: n * (n + 1) / 2
