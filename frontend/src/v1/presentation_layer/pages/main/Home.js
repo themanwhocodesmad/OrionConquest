@@ -4,6 +4,8 @@ import PlanetInfoComponent from '../../components/page-components/home/PlanetInf
 import PlanetStoresComponent from '../../components/page-components/home/PlanetStoresComponent';
 import { usePlanetContext } from '../../../business_layer/context/PlanetContext';
 import planetAPI from '../../../api_layer/apis/playerAPIs/planetAPI';
+import FacilitiesButtonComponent from '../../components/page-components/home/FacilitiesButtonComponent';
+import StructuresButtonComponent from '../../components/page-components/home/StructuresButtonComponent';
 
 const Home = () => {
   const [planetData, setPlanetData] = useState({});
@@ -46,12 +48,14 @@ const Home = () => {
             stores={planetData.storesAndEnergy?.stores} 
             energy={planetData.storesAndEnergy?.energy} 
           />
-          {/*<PlanetTroopQueueComponent troopQueue={planetData.troopQueue} />
-          <PlanetBuildingQueueComponent buildingQueue={planetData.buildingQueue} /> */}
+          <FacilitiesButtonComponent planetId={planetId} />
+          <StructuresButtonComponent planetId={planetId}/>
+          {/* Other components */}
         </>
       )}
     </div>
   );
 };
+
 
 export default Home;

@@ -7,12 +7,14 @@ const passport = require('passport');
 require('./authentication/passport');
 
 
+
 // Authentication related routes
 const authRoutes = require('./authentication/auth-routes');
 
 // Gameplay related route imports
 const onboardingRoutes = require('./controllers/v1/routes/onboardingRoutes')
 const planetRoutes = require('./controllers/v1/routes/planetRoutes')
+const armouryRoutes = require('./controllers/v1/routes/armouryRoutes')
 
 // Scheduler imports
 const startProductionRateAgenda = require('./schedulers/mine-production-to-storage-updater');
@@ -62,7 +64,13 @@ app.use(attachUserId)
 // Protected Routes
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/planet', planetRoutes)
+app.use('/api/armoury', armouryRoutes)
 
+/*Chat Server
+const http = require('http');
+const initializeChatServer = require('./chatServer');
+const server = http.createServer(app);
+initializeChatServer(server);*/
 
 // Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI)
@@ -99,3 +107,8 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((error) => {
         console.log(error);
     });
+
+
+/*server.listen(process.env.PORT_FRONT, () => {
+    console.log('Connected to db & listening on port', process.env.PORT);
+});*/

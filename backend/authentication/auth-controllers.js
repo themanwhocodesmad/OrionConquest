@@ -39,19 +39,29 @@ function isLoggedIn(req, res, next) {
 }
 
 const logout = (req, res) => {
-  req.logout()
-  req.session.destroy()
-  res.send('Goodbye!')
-}
+  req.logout((err) => {
+    if (err) { 
+      return res.status(500).json({ error: err.message });
+    }
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.send('Goodbye!');
+    });
+  });
+};
+
 
 
 const checkAuth = (req, res) => {
   // Check if the user is authenticated and send user information
-  res.json({
-    isAuthenticated: req.isAuthenticated(),
-    user: req.user,
-    hasPlanets: req.user ? req.user.hasPlanets : false,
-  });
+  if (req.isAuthenticated()) {
+    // Assuming req.user is populated with the user object upon successful authentication
+    res.json({ isAuthenticated: true, user: req.user });
+  } else {
+    res.json({ isAuthenticated: false });
+  }
 };
 
 module.exports = {

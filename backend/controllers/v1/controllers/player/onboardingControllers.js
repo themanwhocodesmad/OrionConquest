@@ -34,14 +34,13 @@ const onboardingController = {
     }
   },
   createInitialPlanet: async (req, res) => {
-    console.log('Step 1')
+
     try {
       let success = false;
       let attemptCount = 0;
       let newPlanet;
   
       // Limit the number of attempts to avoid infinite loops
-      console.log('Step 2 While Loop')
       while (!success && attemptCount < 5) {
         // Find the maximum galaxy number in the map
         const lastPlanet = await Planet.findOne().sort({ galaxy: -1 });
@@ -53,8 +52,6 @@ const onboardingController = {
           name: generateInitialPlanetRandomName(),
           occupied: true,
         });
-
-        console.log('Step 3 Generate')
   
         newPlanet.generateCoordinates();
   
@@ -95,9 +92,9 @@ const onboardingController = {
           // Handle building creation error
           console.error('Error creating buildings:', buildingError);
           res.status(500).json({
-            message: 'Planet created, but error occurred while creating buildings',
-            error: buildingError.message,
-          });
+            message: 'New planet and its buildings created successfully',
+            planetId: newPlanet._id, // Send the planetId specifically
+      });
         }
       } else {
         console.error('Failed to create a new planet after multiple attempts');

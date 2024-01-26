@@ -1,28 +1,27 @@
 import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../business_layer/context/AuthContext';
-import oauthAPI from '../../../api_layer/apis/authenticationAPIs/oauthAPI';
 import './signIn.css';
 import gameLogo from '../../assets/gameLogo.png';
 
 function SignIn() {
-  const { isAuthenticated, hasPlanets } = useContext(AuthContext);
+  const { isAuthenticated, signIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (!hasPlanets && !window.location.pathname.startsWith('/welcome')) {
+      if (!window.location.pathname.startsWith('/welcome')) {
         // Navigate to the welcome page for users without planets
         navigate('/welcome');
-      } else if (hasPlanets && !window.location.pathname.startsWith('/home')) {
+      } else if (!window.location.pathname.startsWith('/home')) {
         // Navigate to the home page for users with planets
         navigate('/home');
       }
     }
-  }, [isAuthenticated, hasPlanets, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const handleGoogleSignIn = () => {
-    oauthAPI.googleSignIn();
+    signIn(); // Use signIn method from AuthContext
   };
 
   return (

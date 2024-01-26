@@ -9,6 +9,9 @@ import Logout from './v1/presentation_layer/pages/main/Logout';
 import Welcome from './v1/presentation_layer/pages/main/Welcome';
 import { AuthProvider } from './v1/business_layer/context/AuthContext';
 import { PlanetProvider } from './v1/business_layer/context/PlanetContext';
+import Chat from './v1/presentation_layer/pages/main/Chat';
+import Forge from './v1/presentation_layer/pages/secondary/Forge';
+import TroopConstruction from './v1/presentation_layer/pages/secondary/TroopConstruction';
 
 const App = () => {
   return (
@@ -28,6 +31,10 @@ const App = () => {
                 </Layout>
               }
             />
+            <Route path="/chat" element={<Layout><Chat /></Layout>}
+            />
+            <Route path="/forge" element={<Layout><Forge /></Layout>} />
+            <Route path="/forge/:troopId/:troopName" element={<Layout><TroopConstruction /></Layout>} />
           </Routes>
         </PlanetProvider>
       </AuthProvider>

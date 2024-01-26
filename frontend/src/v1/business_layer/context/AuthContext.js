@@ -1,34 +1,44 @@
-// auth-context.js
-import React, { createContext, useState } from 'react';
-import httpClient from '../../api_layer/client';
+import React, { createContext, useState, useEffect } from 'react';
+import oauthAPI from '../../api_layer/apis/authenticationAPIs/oauthAPI';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const [authState, setAuthState] = useState({
-    isAuthenticated: false,
-    user: null,
-    hasPlanets: false,
-  });
+  useEffect(() => {
+    // Check if user is authenticated
+    checkAuthStatus();
+  }, []);
 
-  const updateAuthContext = async () => {
-    setLoading(true);
+  const checkAuthStatus = async () => {
     try {
-      const response = await httpClient.get('/auth/check-auth');
-      const { isAuthenticated, user, hasPlanets } = response.data;
-      setAuthState({ isAuthenticated, user, hasPlanets });
+      const response = await oauthAPI.checkAuth();
+      if (response.isAuthenticated) {
+        setIsAuthenticated(true);
+        setUser(response.user);
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
     } catch (error) {
-      console.error('Error fetching authentication status:', error);
-      // Handle error as needed
-    } finally {
-      setLoading(false);
+      console.error('Authentication check failed', error);
     }
   };
-  
+
+  const signIn = async () => {
+    await oauthAPI.googleSignIn();
+  };
+
+  const signOut = async () => {
+    await oauthAPI.logout();
+    setIsAuthenticated(false);
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ ...authState, updateAuthContext, loading }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
