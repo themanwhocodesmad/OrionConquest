@@ -1,17 +1,18 @@
 import httpClient from "../../client";
 
 const planetAPI = {
-  getPlayerPlanetData: async () => {
+  getPlayerPlanetData: async (planetId) => {
     try {
-      const response = await httpClient.get('/planet/player');
+      const response = await httpClient.get(`/api/planet/${planetId}`);
       return response.data;
     } catch (error) {
       throw error;
     }
   },
+  
   getAllPlanets: async () => {
     try {
-      const response = await httpClient.get('/planet/all');
+      const response = await httpClient.get('/api/planet/all');
       return response.data;
     } catch (error) {
       throw error;
@@ -20,7 +21,7 @@ const planetAPI = {
   
   destroyPlanet: async (planetId) => {
     try {
-      const response = await httpClient.delete(`/planet/${planetId}/destroy`);
+      const response = await httpClient.delete(`/api/planet/${planetId}/destroy`);
       return response.data;
     } catch (error) {
       throw error;
@@ -28,4 +29,4 @@ const planetAPI = {
   },
 };
 
-export default planetApiService;
+export default planetAPI;

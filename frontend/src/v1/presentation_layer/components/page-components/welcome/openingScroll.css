@@ -1,0 +1,57 @@
+/* openingScroll.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&display=swap');
+
+.scroller-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: whitesmoke;
+  background-size: cover;
+  color: #fff;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.scroller-content {
+  max-width: 600px; /* Adjust based on your preference */
+  padding: 20px;
+  background-color: rgba(26, 26, 26, 0.85); /* Semi-transparent backdrop */
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.scroller-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  animation: fadeIn 2s;
+}
+
+.scroller-content p {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  line-height: 1.6;
+  animation: fadeIn 3s;
+}
+
+.start-button {
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  color: #fff;
+  background-color: #3498db; /* Button color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 4s;
+}
+
+.start-button:hover {
+  background-color: #2980b9; /* Darker shade on hover */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

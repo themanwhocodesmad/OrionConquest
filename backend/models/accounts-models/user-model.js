@@ -34,7 +34,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  roles: [String],
+  roles: {
+    type: String,
+    default: 'players'
+  }, 
 
   hasPlanets: {type:Boolean, default: false}
 

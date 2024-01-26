@@ -14,7 +14,7 @@ const planetSchema = new Schema({
     coordinates: {type: String, unique: true},
     name: { type: String, default: generateInitialPlanetRandomName() }, // TODO function to generate random name
     occupied: {type:Boolean, default:false}, 
-    owner: { type: Schema.Types.ObjectId, ref: 'Player' }
+    player: { type: Schema.Types.ObjectId, ref: 'Player' }
 }, { timestamps: true })
 
 // Ensure unique combination of galaxy and planetNumber

@@ -3,7 +3,7 @@ import httpClient from "../../client";
 const onboardingAPI = {
   createPlayer: async (playerName) => {
     try {
-      const response = await httpClient.post('onboarding/create', { playerName });
+      const response = await httpClient.post('api/onboarding/create', { playerName });
       return response.data;
     } catch (error) {
       throw error;
@@ -11,7 +11,7 @@ const onboardingAPI = {
   },
   initialPlanet: async () => {
     try {
-      const response = await httpClient.post('onboarding/initial');
+      const response = await httpClient.post('api/onboarding/initial');
       return response.data;
     } catch (error) {
       throw error;

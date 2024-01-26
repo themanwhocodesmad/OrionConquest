@@ -1,0 +1,109 @@
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.header {
+  background-color: #1a1a1a; /* Dark background for contrast */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* This will push the logo to the left and the title to the center */
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+
+.logo {
+  height: 50px; /* Adjust size as needed */
+}
+
+.title-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center; /* This will center the title in the available space */
+  align-items: center;
+}
+
+h1 {
+  margin: 0; /* Remove default margin to assist with centering */
+  font-weight: 600; /* Adjust font-weight as needed for sleek design */
+  /* Add any additional styling for the title here */
+}
+
+
+.logo {
+  height: 50px;
+  margin-right: 15px;
+}
+
+.footer {
+  background-color: #1a1a1a;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+}
+
+.footer {
+  background-color: #1a1a1a;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+}
+
+.pro-sidebar {
+  background-color: #2c2c2c;
+  color: #fff;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.active {
+  background-color: #414141;
+}
+
+.menu-item button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.menu-item button:hover {
+  color: #4caf50; /* Green for hover state */
+}
+
+.pro-sidebar {
+  background-color: #2c3e50; /* Sleek dark color */
+  color: white;
+}
+
+.pro-sidebar .pro-menu-item, .pro-sidebar .pro-sub-menu > .pro-inner-item {
+  color: white;
+}
+
+.pro-sidebar .pro-menu-item.active, .pro-sidebar .pro-sub-menu > .pro-inner-item.active {
+  background-color: #34495e; /* Slightly lighter shade for active items */
+}
+
+.sidebar-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+
+

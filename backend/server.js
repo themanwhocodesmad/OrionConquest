@@ -6,19 +6,13 @@ const MongoStore = require('connect-mongo'); // Import connect-mongo
 const passport = require('passport');
 require('./authentication/passport');
 
-// Import isLoggedIn middleware
-const { isLoggedIn } = require('./authentication/auth-controllers');
 
 // Authentication related routes
 const authRoutes = require('./authentication/auth-routes');
 
 // Gameplay related route imports
-const Homeroutes = require('./routes/player-related/home-routes')
-const userRoutes = require('./routes/player-related/player-related-routes')
-const buildingRoutes = require('./routes/gameplay-routes/building-routes');
-const fleetRoutes = require('./routes/gameplay-routes/fleet-routes');
-const armouryRoutes = require('./routes/gameplay-routes/armoury-routes');
-const planetRoutes = require('./routes/gameplay-routes/planet-routes');
+const onboardingRoutes = require('./controllers/v1/routes/onboardingRoutes')
+const planetRoutes = require('./controllers/v1/routes/planetRoutes')
 
 // Scheduler imports
 const startProductionRateAgenda = require('./schedulers/mine-production-to-storage-updater');
@@ -50,19 +44,25 @@ app.use((req, res, next) => {
     next();
 });
 
+// Middleware to attach userId to req
+const attachUserId = (req, res, next) => {
+    if (req.isAuthenticated()) {
+      req.userId = req.user._id;
+    }
+    next();
+  };
+
 // Public Routes
 app.use('/auth', authRoutes);
 
-// Apply isLoggedIn middleware to protect all subsequent routes
-//app.use(isLoggedIn);
+
+// Apply attachUserId middleware globally
+app.use(attachUserId)
 
 // Protected Routes
-app.use('/api/user', userRoutes);
-app.use('/', Homeroutes)
-app.use('/api/planet', planetRoutes);
-app.use('/api/armoury', armouryRoutes);
-app.use('/api/building', buildingRoutes);
-app.use('/api/fleet', fleetRoutes);
+app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/planet', planetRoutes)
+
 
 // Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI)
